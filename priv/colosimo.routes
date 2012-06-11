@@ -1,0 +1,13 @@
+% Routes file.
+
+% Front page
+{"/", [{controller, "main"}, {action, "index"}]}.
+
+% About
+{"/about", [{controller, "main"}, {action, "about"}]}.
+
+% 404 File Not Found handler
+{404, [{controller, "main"}, {action, "nope"}]}.
+
+% 500 Internal Error handler (only invoked in production)
+{500, [{controller, "main"}, {action, "oops"}]}.

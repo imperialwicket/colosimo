@@ -1,1 +1,0 @@
-Colosimo is a <a href="http://www.chicagoboss.org">Chicago Boss</a> sample project that displays PostgreSQL usage, basic templating, user registration/login, and password encryption with bcrypt (using <a href="https://github.com/mrinalwadhwa/erlang-bcrypt">erlang-bcrypt</a>).

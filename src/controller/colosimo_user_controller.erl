@@ -6,7 +6,7 @@ login('GET', []) ->
 
 login('POST', []) ->
     Username = Req:post_param("username"),
-    case boss_db:find(colosimo_user, [{username, Username}], 1) of
+    case boss_db:find(colosimo_user, [{username, 'equals', Username}]) of
         [ColosimoUser] ->
             case ColosimoUser:check_password(Req:post_param("password")) of
                 true ->

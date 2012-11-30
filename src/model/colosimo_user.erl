@@ -7,6 +7,7 @@ session_identifier() ->
     mochihex:to_hex(erlang:md5(?SETEC_ASTRONOMY ++ Id)).
 
 check_password(PasswordAttempt) ->
+    bcrypt:start(),
     {ok, Password} =:= bcrypt:hashpw(PasswordAttempt, Password).
 
 login_cookies() ->

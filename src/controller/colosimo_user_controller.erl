@@ -13,19 +13,23 @@ login('POST', []) ->
                    {redirect, proplists:get_value("redirect",
                        Req:post_params(), "/"), ColosimoUser:login_cookies()};
                 false ->
-                    {ok, [{error, "Authentication error"}]}
+                    {ok, [{error, "Authentication error: password check failed"}]}
             end;
         [] ->
-            {ok, [{error, "Authentication error"}]}
+            {ok, [{error, "Authentication error: no user found"}]}
     end.
 
 register('GET', []) ->
     {ok, []};
 
 register('POST', []) ->
+    bcrypt:start(),
     Email = Req:post_param("email"),
     Username = Req:post_param("username"),
-    Password = bcrypt:hashpw(Req:post_param("password"),bcrypt:gen_salt()),
-    ColosimoUser = colosimo_user:new(id, Email, Username, Password),
+    %% I needed to do a bit of pattern-matching for gen_salt() and
+    %% hashpw() in order to make the password store correctly.
+    {ok, Salt} = bcrypt:gen_salt(),
+    {ok, Hash} = bcrypt:hashpw(Req:post_param("password"),Salt),
+    ColosimoUser = colosimo_user:new(id, Email, Username, Hash),
     Result = ColosimoUser:save(),
     {ok, [Result]}.

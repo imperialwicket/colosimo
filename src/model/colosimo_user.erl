@@ -4,12 +4,12 @@
 -define(SETEC_ASTRONOMY, "Too many secrets").
 
 session_identifier() ->
-    mochihex:to_hex(erlang:md5(?SETEC_ASTRONOMY ++ Id)).
+  mochihex:to_hex(erlang:md5(?SETEC_ASTRONOMY ++ Id)).
 
 check_password(PasswordAttempt) ->
-    bcrypt:start(),
-    {ok, Password} =:= bcrypt:hashpw(PasswordAttempt, Password).
+  bcrypt:start(),
+  {ok, Password} =:= bcrypt:hashpw(PasswordAttempt, Password).
 
 login_cookies() ->
-    [ mochiweb_cookies:cookie("colosimo_user_id", Id, [{path, "/"}]),
-        mochiweb_cookies:cookie("session_id", session_identifier(), [{path, "/"}]) ].
+  [ mochiweb_cookies:cookie("colosimo_user_id", Id, [{path, "/"}]),
+    mochiweb_cookies:cookie("session_id", session_identifier(), [{path, "/"}]) ].

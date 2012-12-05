@@ -2,7 +2,7 @@
 -compile(export_all).
 
 authorize_(User, DomainName, IPAddress) ->
-    true.
+  true.
 
 % post(FromAddress, Message) ->
 %    ok.

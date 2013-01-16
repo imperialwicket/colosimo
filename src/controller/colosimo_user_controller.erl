@@ -19,17 +19,14 @@ register('GET', []) ->
 
 register('POST', []) ->
   bcrypt:start(),
-  Username = Req:post_param("username"),
-  case boss_db:find(colosimo_user, [{username, 'equals', Username}]) of
+  case boss_db:find(colosimo_user, [{username, 'equals', Req:post_param("username")}]) of
     [ColosimoUser] ->
       {ok, [{error, "Email already taken"}]};
     [] ->
-      HashedPassword = user_lib:get_hash(Req:post_param("password")),
-      ColosimoUser = colosimo_user:new(id, Req:post_param("email"), Username, HashedPassword),
-      Saved = ColosimoUser:save(),
-      error_logger:info_msg("Saved User: ~p~n",[Saved]),
-      {ok, [Saved]}
+      SavedUser = user_lib:register_user(Req),
+      {redirect, "/user/login", []}
   end.
 
 logout('GET', []) ->
+  % error_logger:info_msg("Found user: ~p~n",[Before]),
   {redirect, "/", [user_lib:remove_cookies()]}.

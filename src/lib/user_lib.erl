@@ -15,7 +15,7 @@ require_login(Req) ->
       end
   end.
 
-check_password_and_login(Req, ColosimoUser)->
+check_password_and_login(Req, ColosimoUser) ->
   case ColosimoUser:check_password(Req:post_param("password")) of
     true ->
       {redirect, proplists:get_value("redirect", Req:post_params(), "/"), ColosimoUser:set_login_cookies()};
@@ -23,11 +23,16 @@ check_password_and_login(Req, ColosimoUser)->
       {ok, [{error, "Authentication error: password check failed"}]}
   end.
 
-remove_cookies()->
+remove_cookies() ->
   mochiweb_cookies:cookie("colosimo_user_id", "", [{path, "/"}]),
   mochiweb_cookies:cookie("session_id", "", [{path, "/"}]).
 
-get_hash(Password)->
+get_hash(Password) ->
   {ok, Salt} = bcrypt:gen_salt(),
   {ok, Hash} = bcrypt:hashpw(Password, Salt),
   Hash.
+
+register_user(Req) ->
+  HashedPassword = user_lib:get_hash(Req:post_param("password")),
+  ColosimoUser = colosimo_user:new(id, Req:post_param("email"), Req:post_param("username"), HashedPassword),
+  ColosimoUser:save().

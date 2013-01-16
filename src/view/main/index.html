@@ -1,15 +1,14 @@
 {% extends "base.html" %}
-
-{% block title %}Colosimo{% endblock %}
+{% block title %}Colosimo!{% endblock %}
 
 {% block content %}
-<h1>Welcome to Colosimo!</h1>
-{% if colosimo_user %}
-<p>Glad you could stop by, {{ colosimo_user.username }}.</p>
-{% endif %}
-<p>Colosimo is a Chicago Boss sample project that displays PostgreSQL usage, basic templating, user registration/login, and bcrypt (using <a href="https://github.com/mrinalwadhwa/erlang-bcrypt">erlang-bcrypt</a>).</p>
-{% if not colosimo_user %}
-<p>You should <a href="/user/register">register</a>, it will be fun.</p>
-{% endif %}
+  <h1>Welcome to Colosimo!</h1>
+  It is {% now "jS F Y, H:i" %}
+  {% if _before.current_user %}
+    <p>Glad you could stop by, {{ _before.current_user.username }}.</p>
+  {% endif %}
+  <p>Colosimo is a Chicago Boss sample project that displays PostgreSQL usage, basic templating, user registration/login, and bcrypt (using <a href="https://github.com/mrinalwadhwa/erlang-bcrypt">erlang-bcrypt</a>).</p>
+  {% if not _before.current_user %}
+    <p>You should <a href="/user/register">register</a>, it will be fun.</p>
+  {% endif %}
 {% endblock %}
-

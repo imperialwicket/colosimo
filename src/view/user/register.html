@@ -3,19 +3,21 @@
 {% block title %}Colosimo: Register{% endblock %}
 
 {% block content %}
-<h1>Register</h1>
-{% if error %}
-<h5 style="color:#FF0000;">{{ error }}</h5>
-{% endif %}
-<form method="post">
-Username:<br />
-<input name="username" /><br /><br />
-Email: <br />
-<input name="email" /><br /><br />
-Password:<br />
-<input name="password" type="password" /><br /><br />
+  <h1>Register</h1>
+  {% if error %}
+    <h5 style="color:#FF0000;">{{ error }}</h5>
+  {% endif %}
+  <form method="post">
+    Username:<br />
+    <input name="username" /><br /><br />
+    Email: <br />
+    <input name="email" /><br /><br />
+    Password:<br />
+    <input name="password" type="password" /><br /><br />
+    <input type="submit" value="Register" />
+  </form>
 
-<input type="submit" value="Register" />
-</form>
+  <script type='text/javascript'>
+    $('input[name="username"]').focus();
+  </script>
 {% endblock %}
-

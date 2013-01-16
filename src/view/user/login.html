@@ -3,18 +3,18 @@
 {% block title %}Colosimo: Login{% endblock %}
 
 {% block content %}
-<h1>Login</h1>
-{% if error %}
-<font color="red">{{ error }}</font>
-{% endif %}
-<form method="post">
-Name:<br />
-<input name="username" /><br /><br />
-
-Password:<br />
-<input name="password" type="password" /><br /><br />
-
-<input type="submit" value="Log in" />
-</form>
+  <h1>Login</h1>
+  {% if error %}
+    <font color="red">{{ error }}</font>
+  {% endif %}
+  <form method="post">
+    Name:<br />
+    <input name="username" /><br /><br />
+    Password:<br />
+    <input name="password" type="password" /><br /><br />
+    <input type="submit" value="Log in" />
+  </form>
+  <script type='text/javascript'>
+    $('input[name="username"]').focus();
+  </script>
 {% endblock %}
-

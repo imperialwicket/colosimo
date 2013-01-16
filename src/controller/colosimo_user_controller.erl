@@ -8,13 +8,8 @@ login('POST', []) ->
   Username = Req:post_param("username"),
   case boss_db:find(colosimo_user, [{username, 'equals', Username}]) of
     [ColosimoUser] ->
-      case ColosimoUser:check_password(Req:post_param("password")) of
-      true ->
-        {redirect, proplists:get_value("redirect",
-        Req:post_params(), "/"), ColosimoUser:login_cookies()};
-      false ->
-        {ok, [{error, "Authentication error: password check failed"}]}
-      end;
+      error_logger:info_msg("Found User: ~p~n",[ColosimoUser]),
+      user_lib:check_password(Req, ColosimoUser);
     [] ->
       {ok, [{error, "Authentication error: no user found"}]}
   end.
@@ -24,17 +19,17 @@ register('GET', []) ->
 
 register('POST', []) ->
   bcrypt:start(),
-  Email = Req:post_param("email"),
   Username = Req:post_param("username"),
-  %% I needed to do a bit of pattern-matching for gen_salt() and
-  %% hashpw() in order to make the password store correctly.
-  {ok, Salt} = bcrypt:gen_salt(),
-  {ok, Hash} = bcrypt:hashpw(Req:post_param("password"), Salt),
-  ColosimoUser = colosimo_user:new(id, Email, Username, Hash),
-  Result = ColosimoUser:save(),
-  {ok, [Result]}.
+  case boss_db:find(colosimo_user, [{username, 'equals', Username}]) of
+    [ColosimoUser] ->
+      {ok, [{error, "Email already taken"}]};
+    [] ->
+      HashedPassword = user_lib:get_hash(Req:post_param("password")),
+      ColosimoUser = colosimo_user:new(id, Req:post_param("email"), Username, HashedPassword),
+      Saved = ColosimoUser:save(),
+      error_logger:info_msg("Saved User: ~p~n",[Saved]),
+      {ok, [Saved]}
+  end.
 
 logout('GET', []) ->
-  {redirect, "/",
-    [ mochiweb_cookies:cookie("colosimo_user_id", "", [{path, "/"}]),
-      mochiweb_cookies:cookie("session_id", "", [{path, "/"}]) ]}.
+  {redirect, "/", [user_lib:remove_cookies()]}.

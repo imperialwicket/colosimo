@@ -1,9 +1,6 @@
 -module(user_lib).
 -compile(export_all).
 
-hash_password(Password)->
-  bcrypt:hashpw(Password, bcrypt:gen_salt()).
-
 require_login(Req) ->
   case Req:cookie("colosimo_user_id") of
     undefined -> {ok, []};
@@ -17,3 +14,20 @@ require_login(Req) ->
           end
       end
   end.
+
+check_password(Req, ColosimoUser)->
+  case ColosimoUser:check_password(Req:post_param("password")) of
+  true ->
+    {redirect, proplists:get_value("redirect", Req:post_params(), "/"), ColosimoUser:login_cookies()};
+  false ->
+    {ok, [{error, "Authentication error: password check failed"}]}
+  end.
+
+remove_cookies()->
+  mochiweb_cookies:cookie("colosimo_user_id", "", [{path, "/"}]),
+  mochiweb_cookies:cookie("session_id", "", [{path, "/"}]).
+
+get_hash(Password)->
+  {ok, Salt} = bcrypt:gen_salt(),
+  {ok, Hash} = bcrypt:hashpw(Password, Salt),
+  Hash.

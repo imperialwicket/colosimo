@@ -1,27 +1,32 @@
 <!DOCTYPE html>
-
-<head>
+  <head>
     <meta charset="utf-8">
-
     <title>{% block title %}Colosimo{% endblock %}</title>
     <meta name="description" content="">
-
     <meta name="viewport" content="width=device-width">
-
     <link rel="stylesheet" href="/static/css/main.css">
-
-</head>
-<body>
-<header><h1>Colosimo</h1></header>
-<nav>
-  <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/about">About</a></li>
-    <li><a href="/user/register">Register</a></li>
-    <li><a href="/user/login">Login</a></li>
-    <li><a href="/user/logout">Logout</a></li>
-  </ul>
-</nav>
-{% block content %}{% endblock %}
-</body>
+    <script src="/static/js/vendor/jquery-1.7.2.min.js"></script>
+  </head>
+  <body>
+    <header><h1>Colosimo</h1></header>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+        {% if not _before.current_user %}
+          <li><a href="/user/register">Register</a></li>
+          <li><a href="/user/login">Login</a></li>
+        {% endif %}
+        {% if _before.current_user %}
+          <li><a href="/user/logout">Logout</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% block content %}{% endblock %}
+    {% if _before.current_user %}
+      <footer>
+        Logged in as {{ _before.current_user.username }}.
+      </footer>
+    {% endif %}
+  </body>
 </html>

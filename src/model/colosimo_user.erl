@@ -10,7 +10,7 @@ check_password(PasswordAttempt) ->
   bcrypt:start(),
   {ok, Password} =:= bcrypt:hashpw(PasswordAttempt, Password).
 
-login_cookies() ->
+set_login_cookies() ->
   [ mochiweb_cookies:cookie("colosimo_user_id", Id, [{path, "/"}]),
     mochiweb_cookies:cookie("session_id", session_identifier(), [{path, "/"}]) ].
 

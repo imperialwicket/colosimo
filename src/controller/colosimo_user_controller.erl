@@ -9,7 +9,7 @@ login('POST', []) ->
   case boss_db:find(colosimo_user, [{username, 'equals', Username}]) of
     [ColosimoUser] ->
       error_logger:info_msg("Found User: ~p~n",[ColosimoUser]),
-      user_lib:check_password(Req, ColosimoUser);
+      user_lib:check_password_and_login(Req, ColosimoUser);
     [] ->
       {ok, [{error, "Authentication error: no user found"}]}
   end.

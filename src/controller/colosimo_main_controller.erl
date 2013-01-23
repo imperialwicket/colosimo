@@ -1,11 +1,13 @@
 -module(colosimo_main_controller, [Req]).
 -compile(export_all).
 
-before_(_) ->
-    user_lib:require_login(Req).
+before_(ActionName) ->
+  {ok, User} = user_lib:require_login(Req),
+  % error_logger:info_msg("Found user: ~p~n",[User]),
+  {ok, [{current_user, User}]}.
 
-index('GET', [], ColosimoUser) ->
-  {ok, [{colosimo_user, ColosimoUser}]}.
+index('GET', []) ->
+  {ok, []}.
 
 nope('GET', []) ->
   {ok, []}.

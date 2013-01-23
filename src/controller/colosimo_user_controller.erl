@@ -2,30 +2,31 @@
 -compile(export_all).
 
 login('GET', []) ->
-    {ok, [{redirect, Req:header(referer)}]};
+  {ok, [{redirect, Req:header(referer)}]};
 
 login('POST', []) ->
-    Username = Req:post_param("username"),
-    case boss_db:find(colosimo_user, [{username, 'equals', Username}]) of
-        [ColosimoUser] ->
-            case ColosimoUser:check_password(Req:post_param("password")) of
-                true ->
-                   {redirect, proplists:get_value("redirect",
-                       Req:post_params(), "/"), ColosimoUser:login_cookies()};
-                false ->
-                    {ok, [{error, "Authentication error"}]}
-            end;
-        [] ->
-            {ok, [{error, "Authentication error"}]}
-    end.
+  Username = Req:post_param("username"),
+  case boss_db:find(colosimo_user, [{username, 'equals', Username}]) of
+    [ColosimoUser] ->
+      error_logger:info_msg("Found User: ~p~n",[ColosimoUser]),
+      user_lib:check_password_and_login(Req, ColosimoUser);
+    [] ->
+      {ok, [{error, "Authentication error: no user found"}]}
+  end.
 
 register('GET', []) ->
-    {ok, []};
+  {ok, []};
 
 register('POST', []) ->
-    Email = Req:post_param("email"),
-    Username = Req:post_param("username"),
-    Password = bcrypt:hashpw(Req:post_param("password"),bcrypt:gen_salt()),
-    ColosimoUser = colosimo_user:new(id, Email, Username, Password),
-    Result = ColosimoUser:save(),
-    {ok, [Result]}.
+  bcrypt:start(),
+  case boss_db:find(colosimo_user, [{username, 'equals', Req:post_param("username")}]) of
+    [ColosimoUser] ->
+      {ok, [{error, "Email already taken"}]};
+    [] ->
+      SavedUser = user_lib:register_user(Req),
+      {redirect, "/user/login", []}
+  end.
+
+logout('GET', []) ->
+  % error_logger:info_msg("Found user: ~p~n",[Before]),
+  {redirect, "/", [user_lib:remove_cookies()]}.

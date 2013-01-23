@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.dtl" %}
 
 {% block title %}Colosimo: This is embarassing.{% endblock %}
 

@@ -1,5 +1,4 @@
-{% extends "base.html" %}
-{% block title %}Colosimo!{% endblock %}
+{% extends "base.dtl" %}
 
 {% block content %}
   <h1>Welcome to Colosimo!</h1>

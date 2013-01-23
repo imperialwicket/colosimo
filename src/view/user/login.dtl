@@ -1,22 +1,19 @@
-{% extends "base.html" %}
+{% extends "base.dtl" %}
 
-{% block title %}Colosimo: Register{% endblock %}
+{% block title %}Colosimo: Login{% endblock %}
 
 {% block content %}
-  <h1>Register</h1>
+  <h1>Login</h1>
   {% if error %}
-    <h5 style="color:#FF0000;">{{ error }}</h5>
+    <font color="red">{{ error }}</font>
   {% endif %}
   <form method="post">
-    Username:<br />
+    Name:<br />
     <input name="username" /><br /><br />
-    Email: <br />
-    <input name="email" /><br /><br />
     Password:<br />
     <input name="password" type="password" /><br /><br />
-    <input type="submit" value="Register" />
+    <input type="submit" value="Log in" />
   </form>
-
   <script type='text/javascript'>
     $('input[name="username"]').focus();
   </script>
